@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\profesores;
 use App\Http\Requests\StoreprofesoresRequest;
 use App\Http\Requests\UpdateprofesoresRequest;
-use Illuminate\Support\Facades\DB;
 
 class ProfesoresController extends Controller
 {
@@ -138,15 +137,17 @@ class ProfesoresController extends Controller
         //
         $profesor = profesores::find($request->idProfesor);
 
-        if ($profesor->delete() == 1) {
+        $profesor->estado = $request->estado;
+
+        if ($profesor->save() == 1) {
             return response()->json([
                 'valid' => 1,
-                'message' => 'Profesor eliminado correctamente',
+                'message' => 'Profesor ' . ($request->estado == 1 ? 'activado' : 'inactivado') . ' correctamente',
             ]);
         }
         return response()->json([
             'valid' => 0,
-            'message' => 'No fue posible eliminar el profesor',
+            'message' => 'No fue posible ' . ($request->estado == 1 ? 'activar' : 'inactivar') . ' el profesor',
         ]);
     }
 }

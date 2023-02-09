@@ -1,8 +1,5 @@
 <div class="row my-2">
-  <div class="col-10">
-    <h3><?= Route::currentRouteName() ?></h3>
-  </div>
-  <div class="col-2 text-end">
+  <div class="offset-10 col-2 text-end">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearEstudiante">
       <i class="bi bi-plus-lg"></i> Crear
     </button>

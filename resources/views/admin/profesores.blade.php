@@ -1,8 +1,5 @@
 <div class="row my-2">
-  <div class="col-10">
-    <h3><?= Route::currentRouteName() ?></h3>
-  </div>
-  <div class="col-2 text-end">
+  <div class="offset-10 col-2 text-end">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearProfesor">
       <i class="bi bi-plus-lg"></i> Crear
     </button>
@@ -30,7 +27,7 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal Crear -->
 <div class="modal fade" id="modalCrearProfesor" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalCrearProfesorLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -80,6 +77,57 @@
         </button>
         <button type="submit" class="btn btn-primary btnCrearProfesor" form="frmProfesor">
           <i class="bi bi-check-lg"></i> Crear
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Asignaturas -->
+<div class="modal fade" id="modalAsignarAsignaturas" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalAsignarAsignaturasLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalAsignarAsignaturasLabel">Asignaturas</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      
+        <form id="frmAsignaturaProfesor">
+          <div class="row">
+            <div class="col-12 col-md-8">
+              <label for="asignatura" class="form-label mb-0">Asignaturas</label>
+              <select class="form-select" id="asignatura" name="asignatura">
+                <option value=""></option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4 d-flex align-items-end">
+              <button type="submit" class="btn btn-primary btnAgregarAsignatura w-100" form="frmAsignaturaProfesor">
+                <i class="bi bi-check-lg"></i> Agregar
+              </button>
+            </div>    
+          </div>
+        </form>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Asignatura</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider tbodyasignaturasprofesores"></tbody>
+        </table>
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btnCancelarAsignaturas" data-bs-dismiss="modal">
+          <i class="bi bi-x-lg"></i> Cerrar
+        </button>
+        <button type="submit" class="btn btn-primary btnConfirmarAsignaturas">
+          <i class="bi bi-check-lg"></i> Aceptar
         </button>
       </div>
     </div>

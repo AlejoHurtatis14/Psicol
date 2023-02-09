@@ -81,8 +81,8 @@ function listadoEstudiantes({ estudiantes }) {
           <button type="button" onclick="editarEstudiante(${pos})" class="btn btn-secondary" title="Editar">
             <i class="bi bi-pencil-square"></i>
           </button>
-          <button type="button" onclick="eliminarEstudiante(${pos})" class="btn btn-danger" title="Eliminar">
-            <i class="bi bi-trash-fill"></i>
+          <button type="button" onclick="estadoEstudiante(${pos})" class="btn btn-${it.estado ? 'danger' : 'success'}" title="${it.estado ? 'Inactivar' : 'Activar'}">
+            ${it.estado ? '<i class="bi bi-x-lg"></i>' : '<i class="bi bi-check-lg"></i>'}
           </button>
         </div>
       `;
@@ -97,7 +97,7 @@ function listadoEstudiantes({ estudiantes }) {
         <td>${(it.ciudad || '')}</td>
         <td>${(it.semestre || '')}</td>
         <td>${(it.estado ? '<span class="badge text-bg-success">Activo</span>' : '<span class="badge text-bg-danger">Inactivo</span>')}</td>
-        <td>${buttons}</td>
+        <td class="text-center">${buttons}</td>
       </tr>`;
     })
   } else {
@@ -120,10 +120,10 @@ function editarEstudiante(posicion) {
   $(".btnCrearEstudiante").html('<i class="bi bi-pencil"></i> Modificar');
 }
 
-function eliminarEstudiante(posicion) {
+function estadoEstudiante(posicion) {
   let data = arrayListadoEstudiantes[posicion];
   Swal.fire({
-    title: `Está seguro de eliminar al estudiante ${data.nombre}?`,
+    title: `Está seguro de ${data.estado ? 'inactivar' : 'activar'} al estudiante ${data.nombre}?`,
     showCancelButton: true,
     confirmButtonText: 'Aceptar',
     cancelButtonText: 'Cancelar',
@@ -131,6 +131,7 @@ function eliminarEstudiante(posicion) {
     if (result.isConfirmed) {
       let info = new FormData();
       info.set('idEstudiante', data.id);
+      info.set('estado', (data.estado ? 0 : 1));
       ejecutarPeticion(info, "Estudiantes/Eliminar", "estudianteEliminado");
     }
   })

@@ -135,15 +135,17 @@ class AsignaturasController extends Controller
         //
         $asignatura = asignaturas::find($request->idAsignatura);
 
-        if ($asignatura->delete() == 1) {
+        $asignatura->estado = $request->estado;
+
+        if ($asignatura->save() == 1) {
             return response()->json([
                 'valid' => 1,
-                'message' => 'Asignatura eliminada correctamente',
+                'message' => 'Asignatura ' . ($request->estado == 1 ? 'activada' : 'inactivada') . ' correctamente',
             ]);
         }
         return response()->json([
             'valid' => 0,
-            'message' => 'No fue posible eliminar la asignatura',
+            'message' => 'No fue posible ' . ($request->estado == 1 ? 'activar' : 'inactivar') . ' la asignatura',
         ]);
     }
 }

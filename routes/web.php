@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfesoresController;
 use App\Http\Controllers\AsignaturasController;
 use App\Http\Controllers\EstudiantesController;
+use App\Http\Controllers\AsignaturasProfesoresController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,11 @@ Route::prefix('Estudiantes')->group(function () {
     Route::post('Eliminar', [EstudiantesController::class, 'destroy']);
 });
 
+Route::prefix('AsignaturasProfesor')->group(function () {
+    Route::post('Listar', [AsignaturasProfesoresController::class, 'store']);
+    Route::post('Guardar', [AsignaturasProfesoresController::class, 'create']);
+});
+
 Route::any('{url}', function(){
-    return redirect('Profesores');
+    return redirect('Asignaturas');
 })->where('url', '.*');

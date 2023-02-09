@@ -1,8 +1,5 @@
 <div class="row my-2">
-  <div class="col-10">
-    <h3><?= Route::currentRouteName() ?></h3>
-  </div>
-  <div class="col-2 text-end">
+  <div class="offset-10 col-2 text-end">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearAsignatura">
       <i class="bi bi-plus-lg"></i> Crear
     </button>
@@ -55,7 +52,7 @@
             </div>
             <div class="col-12 col-md-6 mb-3">
               <label for="tipo" class="form-label mb-0">Tipo</label>
-              <select class="form-select" id="tipo" name="tipo" aria-label="Default select example">
+              <select class="form-select" id="tipo" name="tipo">
                 <option selected value="O">Obligatoria</option>
                 <option value="E">Electiva</option>
               </select>

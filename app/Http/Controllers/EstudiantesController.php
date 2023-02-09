@@ -139,15 +139,17 @@ class EstudiantesController extends Controller
         //
         $estudiante = estudiantes::find($request->idEstudiante);
 
-        if ($estudiante->delete() == 1) {
+        $estudiante->estado = $request->estado;
+
+        if ($estudiante->save() == 1) {
             return response()->json([
                 'valid' => 1,
-                'message' => 'Estudiante eliminado correctamente',
+                'message' => 'Estudiante ' . ($request->estado == 1 ? 'activado' : 'inactivado') . ' correctamente',
             ]);
         }
         return response()->json([
             'valid' => 0,
-            'message' => 'No fue posible eliminar el estudiante',
+            'message' => 'No fue posible ' . ($request->estado == 1 ? 'activar' : 'inactivar') . ' el estudiante',
         ]);
     }
 }
