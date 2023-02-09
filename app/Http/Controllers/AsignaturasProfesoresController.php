@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\asignaturas_profesores;
-use App\Models\asignaturas;
 use App\Http\Requests\Storeasignaturas_profesoresRequest;
 use App\Http\Requests\Updateasignaturas_profesoresRequest;
+use App\Models\asignaturas_profesores;
+use App\Models\asignaturas;
 use Illuminate\Support\Facades\DB;
 
 class AsignaturasProfesoresController extends Controller
@@ -55,7 +55,6 @@ class AsignaturasProfesoresController extends Controller
             'valid' => 1,
             'message' => 'Asignaturas guardadas correctamente',
         ]);
-        
     }
 
     /**
@@ -74,9 +73,7 @@ class AsignaturasProfesoresController extends Controller
         ->where("fk_profesor", $request->idProfesor)
         ->get();
 
-        $asignaturas = asignaturas::select(
-            'id', 'nombre'
-        )
+        $asignaturas = asignaturas::select('id', 'nombre')
         ->where("estado", 1)
         ->get();
 
@@ -93,9 +90,20 @@ class AsignaturasProfesoresController extends Controller
      * @param  \App\Models\asignaturas_profesores  $asignaturas_profesores
      * @return \Illuminate\Http\Response
      */
-    public function show(asignaturas_profesores $asignaturas_profesores)
+    public function show(asignaturas_profesores $asignaturas_profesores, Storeasignaturas_profesoresRequest $request)
     {
         //
+        $profesorAsignatura = asignaturas_profesores::select(
+            'profesores.id', 'profesores.nombre'
+        )
+        ->join('profesores', 'asignaturas_profesores.fk_profesor', '=', 'profesores.id')
+        ->where("fk_asignatura", $request->idAsignatura)
+        ->get();
+
+        return response()->json([
+            'valid' => 1,
+            'profesores' => $profesorAsignatura,
+        ]);
     }
 
     /**

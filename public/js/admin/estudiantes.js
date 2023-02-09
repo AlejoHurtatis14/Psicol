@@ -1,5 +1,6 @@
 let arrayListadoEstudiantes = [];
 let idEdicionActual = -1;
+let arrayListadoAsignaturasEstudiante = [];
 
 $(function () {
 
@@ -27,9 +28,40 @@ $(function () {
     }
   });
 
-  $(".btnCancelarEstudiante").on('click', function () {
+  $(".btnCancelarEstudiante, .btnCancelarAsignaturas").on('click', function () {
     if (idEdicionActual > -1) {
       limpiarCampos();
+    }
+  });
+
+  $("#frmAsignaturaEstudiante").on('submit', function (e) {
+    e.preventDefault();
+
+    if ($("#asignatura").val().trim() == '') {
+      return ejecutarNotificacion('error', 'No ha diligenciado el campo asignatura');
+    }
+
+    if ($("#profesor").val().trim() == '') {
+      return ejecutarNotificacion('error', 'No ha diligenciado el campo profesor');
+    }
+
+    let asignatura = $("#asignatura").val();
+
+    let index = arrayListadoAsignaturasEstudiante.findIndex(op => op.fk_asignatura == asignatura);
+
+    if (index == -1) {
+      let data = {
+        id: arrayListadoAsignaturasEstudiante.length + 1,
+        nombre: $("#asignatura option:selected").html(),
+        fk_asignatura: asignatura,
+        fk_profesor: $("#profesor").val(),
+        nombreProf: $("#profesor option:selected").html(),
+        creditos: $("#asignatura option:selected").data('creditos'),
+      }
+      arrayListadoAsignaturasEstudiante.push(data);
+      organizarListadoAsignaturas();
+    } else {
+      ejecutarNotificacion('warning', 'La asignatura ya esta asignada');
     }
   });
 });
@@ -84,6 +116,9 @@ function listadoEstudiantes({ estudiantes }) {
           <button type="button" onclick="estadoEstudiante(${pos})" class="btn btn-${it.estado ? 'danger' : 'success'}" title="${it.estado ? 'Inactivar' : 'Activar'}">
             ${it.estado ? '<i class="bi bi-x-lg"></i>' : '<i class="bi bi-check-lg"></i>'}
           </button>
+          ${it.estado ? `<button type="button" onclick="asignarAsignaturas(${pos})" class="btn btn-info" title="Asignaturas">
+            <i class="bi bi-bookmark-plus"></i>
+          </button>` : ''}
         </div>
       `;
 
@@ -141,6 +176,115 @@ function estudianteEliminado({ valid, message }) {
   if (valid) {
     ejecutarNotificacion('success', message);
     ejecutarPeticion({}, "Estudiantes/Listar", "listadoEstudiantes");
+  } else {
+    ejecutarNotificacion('error', message);
+  }
+}
+
+function asignarAsignaturas(index) {
+  let data = arrayListadoEstudiantes[index];
+  idEdicionActual = data.id;
+  let info = new FormData();
+  info.set('idEstudiante', data.id);
+  ejecutarPeticion(info, "AsignaturasEstudiante/Listar", "listadoAsignaturasEstudiante");
+
+  $(".btnConfirmarAsignaturas").off('click').on('click', function () {
+    let totalCreditos = 0;
+    arrayListadoAsignaturasEstudiante.forEach(it => totalCreditos += +it.creditos);
+
+    if (totalCreditos < 7) {
+      ejecutarNotificacion('warning', 'El minimo de créditos debe ser 7');
+      return
+    }
+
+    Swal.fire({
+      title: `Está seguro de guardar los cambios?`,
+      showCancelButton: true,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let info = new FormData();
+        info.set('idEstudiante', idEdicionActual);
+        info.set('asignaturas', JSON.stringify(arrayListadoAsignaturasEstudiante));
+        ejecutarPeticion(info, "AsignaturasEstudiante/Guardar", "asignaturasAgregadasEstudiante");
+      }
+    })
+  });
+}
+
+function listadoAsignaturasEstudiante({ asignaturas, asignaturasEstudiante }) {
+  arrayListadoAsignaturasEstudiante = asignaturasEstudiante;
+  let estructura = '';
+  if (asignaturas.length) {
+    asignaturas.forEach((it, pos) => {
+      estructura += `<option value="${it.id}" data-creditos="${it.creditos}">${it.nombre}</option>`;
+    })
+  } else {
+    estructura = `<option value="" selected>No se encontraron asignaturas</option>`;
+  }
+  $("#asignatura").html(estructura);
+  organizarListadoAsignaturas();
+  $("#modalAsignarAsignaturas").modal('show');
+
+  $("#asignatura").off('change').on('change', function () {
+    let info = new FormData();
+    info.set('idAsignatura', $(this).val());
+    ejecutarPeticion(info, "AsignaturasProfesor/Profesores", "profesoresAsigntura");
+  });
+  $("#asignatura").change();
+}
+
+function profesoresAsigntura({ profesores }) {
+  let estructura = '';
+  if (profesores.length) {
+    profesores.forEach((it, pos) => {
+      estructura += `<option value="${it.id}">${it.nombre}</option>`;
+    })
+  } else {
+    estructura = `<option value="" selected>No se encontraron profesores</option>`;
+  }
+  $("#profesor").html(estructura);
+}
+
+function organizarListadoAsignaturas() {
+  let estructura = '';
+  if (arrayListadoAsignaturasEstudiante.length) {
+    arrayListadoAsignaturasEstudiante.forEach((it, pos) => {
+
+      let buttons = `
+        <button type="button" onclick="quitarAsignaturaProfesor(${pos})" class="btn btn-danger" title="Quitar">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      `;
+
+      estructura += `<tr>
+        <th scope="row">${pos + 1}</th>
+        <td>${it.nombre}</td>
+        <td>${it.creditos}</td>
+        <td>${it.nombreProf}</td>
+        <td class="text-center">${buttons}</td>
+      </tr>`;
+    })
+  } else {
+    estructura = `<tr>
+      <td colspan="4" class="text-center">No se encontraron asignaturas</td>
+    </tr>`;
+  }
+  $(".tbodyasignaturasestudiantes").html(estructura);
+}
+
+function quitarAsignaturaProfesor(posicion) {
+  arrayListadoAsignaturasEstudiante.splice(posicion, 1);
+  organizarListadoAsignaturas();
+}
+
+function asignaturasAgregadasEstudiante({ valid, message }) {
+  if (valid) {
+    ejecutarNotificacion('success', message);
+    ejecutarPeticion({}, "Estudiantes/Listar", "listadoEstudiantes");
+    $("#modalAsignarAsignaturas").modal('hide');
+    limpiarCampos();
   } else {
     ejecutarNotificacion('error', message);
   }

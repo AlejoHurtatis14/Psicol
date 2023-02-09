@@ -89,3 +89,60 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="modalAsignarAsignaturas" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalAsignarAsignaturasLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalAsignarAsignaturasLabel">Asignaturas</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      
+        <form id="frmAsignaturaEstudiante">
+          <div class="row">
+            <div class="col-12 col-md-4">
+              <label for="asignatura" class="form-label mb-0">Asignaturas</label>
+              <select class="form-select" id="asignatura" name="asignatura">
+                <option value=""></option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4">
+              <label for="profesor" class="form-label mb-0">Profesores</label>
+              <select class="form-select" id="profesor" name="profesor">
+                <option value=""></option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4 d-flex align-items-end">
+              <button type="submit" class="btn btn-primary btnAgregarAsignatura w-100" form="frmAsignaturaEstudiante">
+                <i class="bi bi-check-lg"></i> Agregar
+              </button>
+            </div>    
+          </div>
+        </form>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Asignatura</th>
+              <th scope="col">Créditos</th>
+              <th scope="col">Profesor</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider tbodyasignaturasestudiantes"></tbody>
+        </table>
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btnCancelarAsignaturas" data-bs-dismiss="modal">
+          <i class="bi bi-x-lg"></i> Cerrar
+        </button>
+        <button type="submit" class="btn btn-primary btnConfirmarAsignaturas">
+          <i class="bi bi-check-lg"></i> Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

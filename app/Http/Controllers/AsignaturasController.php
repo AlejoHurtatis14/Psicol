@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\asignaturas;
 use App\Http\Requests\StoreasignaturasRequest;
 use App\Http\Requests\UpdateasignaturasRequest;
+use App\Models\asignaturas;
 
 class AsignaturasController extends Controller
 {

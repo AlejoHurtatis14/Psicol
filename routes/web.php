@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfesoresController;
 use App\Http\Controllers\AsignaturasController;
 use App\Http\Controllers\EstudiantesController;
 use App\Http\Controllers\AsignaturasProfesoresController;
+use App\Http\Controllers\AsignaturasEstudianteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,12 @@ Route::prefix('Estudiantes')->group(function () {
 Route::prefix('AsignaturasProfesor')->group(function () {
     Route::post('Listar', [AsignaturasProfesoresController::class, 'store']);
     Route::post('Guardar', [AsignaturasProfesoresController::class, 'create']);
+    Route::post('Profesores', [AsignaturasProfesoresController::class, 'show']);
+});
+
+Route::prefix('AsignaturasEstudiante')->group(function () {
+    Route::post('Listar', [AsignaturasEstudianteController::class, 'store']);
+    Route::post('Guardar', [AsignaturasEstudianteController::class, 'create']);
 });
 
 Route::any('{url}', function(){
