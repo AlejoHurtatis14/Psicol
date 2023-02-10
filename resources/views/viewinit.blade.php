@@ -14,8 +14,8 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     </head>
     <body class="antialiased">
+      <?= view('main/navbar') ?>
       <div class="container h-100">
-        <?= view('main/navbar') ?>
         <?= view($viewload) ?>
       </div>
       <?= view('main/footer') ?>

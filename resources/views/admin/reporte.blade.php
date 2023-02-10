@@ -4,6 +4,7 @@
       <div class="col-12 col-md-4">
         <label for="estudiante" class="form-label mb-0">Estudiante</label>
         <select class="form-select" id="estudiante" name="estudiante">
+          <option value="">Seleccione...</option>
           @foreach ($estudiantes as $estudiante)
             <option value="{{ $estudiante->id }}">{{ $estudiante->documento }} | {{ $estudiante->nombre }}</option>
           @endforeach
@@ -24,6 +25,8 @@
       <thead>
         <tr>
           <th scope="col">#</th>
+          <th scope="col">Documento</th>
+          <th scope="col">Estudiante</th>
           <th scope="col">Asignatura</th>
           <th scope="col">Área de Conocimiento</th>
           <th scope="col">Créditos</th>
@@ -33,11 +36,7 @@
           <th scope="col">Profesor</th>
         </tr>
       </thead>
-      <tbody class="table-group-divider tbodyasignaturas">
-        <tr>
-          <td colspan="8" class="text-center">No se encontraron registros</td>
-        </tr>
-      </tbody>
+      <tbody class="table-group-divider tbodyasignaturas"></tbody>
     </table>
   </div>
 </div>

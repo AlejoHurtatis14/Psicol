@@ -2,11 +2,6 @@ $(function () {
 
   $("#frmBuscar").on('submit', function (e) {
     e.preventDefault();
-
-    if ($("#estudiante").val().trim() == '') {
-      return ejecutarNotificacion('error', 'No ha seleccionado el estudiante');
-    }
-
     $.ajax({
       url: urlBase() + 'Reporte/Listar',
       type: 'POST',
@@ -22,6 +17,8 @@ $(function () {
 
             estructura += `<tr>
               <th scope="row">${pos + 1}</th>
+              <td>${it.documento}</td>
+              <td>${it.nombreEstudiante}</td>
               <td>${it.nombre}</td>
               <td>${it.areaconocimiento}</td>
               <td>${(it.creditos || '')}</td>
@@ -33,11 +30,13 @@ $(function () {
           });
         } else {
           estructura = `<tr>
-            <td colspan="8" class="text-center">No se encontraron registros</td>
+            <td colspan="10" class="text-center">No se encontraron registros</td>
           </tr>`;
         }
         $(".tbodyasignaturas").html(estructura);
       }
     });
   });
+
+  $("#frmBuscar").submit();
 });

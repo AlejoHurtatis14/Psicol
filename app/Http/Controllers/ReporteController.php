@@ -56,11 +56,17 @@ class ReporteController extends Controller
             , 'estudiantes.semestre'
             , 'profesores.documento AS docProfesor'
             , 'profesores.nombre AS nomProfesor'
+            , 'estudiantes.nombre AS nombreEstudiante'
+            , 'estudiantes.documento'
         )->join('asignaturas', 'asignaturas_estudiantes.fk_asignatura', '=', 'asignaturas.id')
         ->join('profesores', 'asignaturas_estudiantes.fk_profesor', '=', 'profesores.id')
-        ->join('estudiantes', 'asignaturas_estudiantes.fk_estudiante', '=', 'estudiantes.id')
-        ->where('asignaturas_estudiantes.fk_estudiante', $request->estudiante)
-        ->get();
+        ->join('estudiantes', 'asignaturas_estudiantes.fk_estudiante', '=', 'estudiantes.id');
+
+        if (!is_null($request->estudiante)) {
+            $asignaturas = $asignaturas->where('asignaturas_estudiantes.fk_estudiante', $request->estudiante);
+        }
+
+        $asignaturas = $asignaturas->get();
 
         return response()->json([
             'valid' => 1,
