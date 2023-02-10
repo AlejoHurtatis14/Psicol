@@ -1,10 +1,11 @@
 let arrayListadoProfesores = [];
 let idEdicionActual = -1;
 let arrayListadoAsignaturasProfesores = [];
+let contexto = this;
 
 $(function () {
 
-  ejecutarPeticion({}, "Profesores/Listar", "listadoProfesores");
+  ejecutarPeticion({}, "Profesores/Listar", "listadoProfesores", contexto)
 
   $("#frmProfesor").on('submit', function (e) {
     e.preventDefault();
@@ -22,9 +23,9 @@ $(function () {
 
     if (idEdicionActual > -1) {
       form.set('idEditar', idEdicionActual);
-      ejecutarPeticion(form, "Profesores/Editar", "respuestaProfesor")
+      ejecutarPeticion(form, "Profesores/Editar", "respuestaProfesor", contexto)
     } else {
-      ejecutarPeticion(form, "Profesores/Crear", "respuestaProfesor")
+      ejecutarPeticion(form, "Profesores/Crear", "respuestaProfesor", contexto)
     }
   });
 
@@ -59,27 +60,10 @@ $(function () {
   });
 });
 
-function ejecutarPeticion(form, metodoBack, funcionRetorno) {
-  $.ajax({
-    url: urlBase() + metodoBack,
-    type: 'POST',
-    dataType: 'json',
-    data: form,
-    processData: false,
-    contentType: false,
-    cache: false,
-    success: (resp) => {
-      if (funcionRetorno) {
-        this[funcionRetorno](resp)
-      }
-    }
-  });
-}
-
 function respuestaProfesor({ valid, message }) {
   if (valid) {
     ejecutarNotificacion('success', message);
-    ejecutarPeticion({}, "Profesores/Listar", "listadoProfesores");
+    ejecutarPeticion({}, "Profesores/Listar", "listadoProfesores", contexto);
     limpiarCampos();
   } else {
     ejecutarNotificacion('error', message);
@@ -159,7 +143,7 @@ function estadoProfesor(posicion) {
       let info = new FormData();
       info.set('idProfesor', data.id);
       info.set('estado', (data.estado ? 0 : 1));
-      ejecutarPeticion(info, "Profesores/Eliminar", "profesorEliminado");
+      ejecutarPeticion(info, "Profesores/Eliminar", "profesorEliminado", contexto);
     }
   })
 }
@@ -167,7 +151,7 @@ function estadoProfesor(posicion) {
 function profesorEliminado({ valid, message }) {
   if (valid) {
     ejecutarNotificacion('success', message);
-    ejecutarPeticion({}, "Profesores/Listar", "listadoProfesores");
+    ejecutarPeticion({}, "Profesores/Listar", "listadoProfesores", contexto);
   } else {
     ejecutarNotificacion('error', message);
   }
@@ -178,7 +162,7 @@ function asignarAsignaturas(index) {
   idEdicionActual = data.id;
   let info = new FormData();
   info.set('idProfesor', data.id);
-  ejecutarPeticion(info, "AsignaturasProfesor/Listar", "listadoAsignaturasProfesor");
+  ejecutarPeticion(info, "AsignaturasProfesor/Listar", "listadoAsignaturasProfesor", contexto);
 
   $(".btnConfirmarAsignaturas").off('click').on('click', function () {
     Swal.fire({
@@ -191,7 +175,7 @@ function asignarAsignaturas(index) {
         let info = new FormData();
         info.set('idProfesor', idEdicionActual);
         info.set('asignaturas', JSON.stringify(arrayListadoAsignaturasProfesores));
-        ejecutarPeticion(info, "AsignaturasProfesor/Guardar", "asignaturasAgregadasProfesor");
+        ejecutarPeticion(info, "AsignaturasProfesor/Guardar", "asignaturasAgregadasProfesor", contexto);
       }
     })
   });
@@ -245,7 +229,7 @@ function quitarAsignaturaProfesor(posicion) {
 function asignaturasAgregadasProfesor({ valid, message }) {
   if (valid) {
     ejecutarNotificacion('success', message);
-    ejecutarPeticion({}, "Profesores/Listar", "listadoProfesores");
+    ejecutarPeticion({}, "Profesores/Listar", "listadoProfesores", contexto);
     $("#modalAsignarAsignaturas").modal('hide');
     limpiarCampos();
   } else {

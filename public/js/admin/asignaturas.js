@@ -1,9 +1,11 @@
 let arrayListadoAsignaturas = [];
 let idEdicionActual = -1;
+let contexto = this;
 
 $(function () {
 
-  ejecutarPeticion({}, "Asignaturas/Listar", "listadoAsignaturas");
+  /* Obtenemos las asignaturas registradas */
+  ejecutarPeticion({}, "Asignaturas/Listar", "listadoAsignaturas", contexto);
 
   $("#frmAsignatura").on('submit', function (e) {
     e.preventDefault();
@@ -25,9 +27,9 @@ $(function () {
 
     if (idEdicionActual > -1) {
       form.set('idEditar', idEdicionActual);
-      ejecutarPeticion(form, "Asignaturas/Editar", "respuestaAsignatura")
+      ejecutarPeticion(form, "Asignaturas/Editar", "respuestaAsignatura", contexto)
     } else {
-      ejecutarPeticion(form, "Asignaturas/Crear", "respuestaAsignatura")
+      ejecutarPeticion(form, "Asignaturas/Crear", "respuestaAsignatura", contexto)
     }
   });
 
@@ -38,27 +40,10 @@ $(function () {
   });
 });
 
-function ejecutarPeticion(form, metodoBack, funcionRetorno) {
-  $.ajax({
-    url: urlBase() + metodoBack,
-    type: 'POST',
-    dataType: 'json',
-    data: form,
-    processData: false,
-    contentType: false,
-    cache: false,
-    success: (resp) => {
-      if (funcionRetorno) {
-        this[funcionRetorno](resp)
-      }
-    }
-  });
-}
-
 function respuestaAsignatura({ valid, message }) {
   if (valid) {
     ejecutarNotificacion('success', message);
-    ejecutarPeticion({}, "Asignaturas/Listar", "listadoAsignaturas");
+    ejecutarPeticion({}, "Asignaturas/Listar", "listadoAsignaturas", contexto);
     limpiarCampos();
   } else {
     ejecutarNotificacion('error', message);
@@ -135,7 +120,7 @@ function eliminarAsignatura(posicion) {
       let info = new FormData();
       info.set('idAsignatura', data.id);
       info.set('estado', (data.estado ? 0 : 1));
-      ejecutarPeticion(info, "Asignaturas/Eliminar", "asignaturaEliminada");
+      ejecutarPeticion(info, "Asignaturas/Eliminar", "asignaturaEliminada", contexto);
     }
   })
 }
@@ -143,7 +128,7 @@ function eliminarAsignatura(posicion) {
 function asignaturaEliminada({ valid, message }) {
   if (valid) {
     ejecutarNotificacion('success', message);
-    ejecutarPeticion({}, "Asignaturas/Listar", "listadoAsignaturas");
+    ejecutarPeticion({}, "Asignaturas/Listar", "listadoAsignaturas", contexto);
   } else {
     ejecutarNotificacion('error', message);
   }

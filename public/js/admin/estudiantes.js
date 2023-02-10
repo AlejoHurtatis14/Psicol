@@ -1,10 +1,11 @@
 let arrayListadoEstudiantes = [];
 let idEdicionActual = -1;
 let arrayListadoAsignaturasEstudiante = [];
+let contexto = this;
 
 $(function () {
 
-  ejecutarPeticion({}, "Estudiantes/Listar", "listadoEstudiantes");
+  ejecutarPeticion({}, "Estudiantes/Listar", "listadoEstudiantes", contexto)
 
   $("#frmEstudiante").on('submit', function (e) {
     e.preventDefault();
@@ -22,9 +23,9 @@ $(function () {
 
     if (idEdicionActual > -1) {
       form.set('idEditar', idEdicionActual);
-      ejecutarPeticion(form, "Estudiantes/Editar", "respuestaEstudiante")
+      ejecutarPeticion(form, "Estudiantes/Editar", "respuestaEstudiante", contexto)
     } else {
-      ejecutarPeticion(form, "Estudiantes/Crear", "respuestaEstudiante")
+      ejecutarPeticion(form, "Estudiantes/Crear", "respuestaEstudiante", contexto)
     }
   });
 
@@ -66,27 +67,10 @@ $(function () {
   });
 });
 
-function ejecutarPeticion(form, metodoBack, funcionRetorno) {
-  $.ajax({
-    url: urlBase() + metodoBack,
-    type: 'POST',
-    dataType: 'json',
-    data: form,
-    processData: false,
-    contentType: false,
-    cache: false,
-    success: (resp) => {
-      if (funcionRetorno) {
-        this[funcionRetorno](resp)
-      }
-    }
-  });
-}
-
 function respuestaEstudiante({ valid, message }) {
   if (valid) {
     ejecutarNotificacion('success', message);
-    ejecutarPeticion({}, "Estudiantes/Listar", "listadoEstudiantes");
+    ejecutarPeticion({}, "Estudiantes/Listar", "listadoEstudiantes", contexto)
     limpiarCampos();
   } else {
     ejecutarNotificacion('error', message);
@@ -167,7 +151,7 @@ function estadoEstudiante(posicion) {
       let info = new FormData();
       info.set('idEstudiante', data.id);
       info.set('estado', (data.estado ? 0 : 1));
-      ejecutarPeticion(info, "Estudiantes/Eliminar", "estudianteEliminado");
+      ejecutarPeticion(info, "Estudiantes/Eliminar", "estudianteEliminado", contexto)
     }
   })
 }
@@ -175,7 +159,7 @@ function estadoEstudiante(posicion) {
 function estudianteEliminado({ valid, message }) {
   if (valid) {
     ejecutarNotificacion('success', message);
-    ejecutarPeticion({}, "Estudiantes/Listar", "listadoEstudiantes");
+    ejecutarPeticion({}, "Estudiantes/Listar", "listadoEstudiantes", contexto)
   } else {
     ejecutarNotificacion('error', message);
   }
@@ -186,7 +170,7 @@ function asignarAsignaturas(index) {
   idEdicionActual = data.id;
   let info = new FormData();
   info.set('idEstudiante', data.id);
-  ejecutarPeticion(info, "AsignaturasEstudiante/Listar", "listadoAsignaturasEstudiante");
+  ejecutarPeticion(info, "AsignaturasEstudiante/Listar", "listadoAsignaturasEstudiante", contexto)
 
   $(".btnConfirmarAsignaturas").off('click').on('click', function () {
     let totalCreditos = 0;
@@ -207,7 +191,7 @@ function asignarAsignaturas(index) {
         let info = new FormData();
         info.set('idEstudiante', idEdicionActual);
         info.set('asignaturas', JSON.stringify(arrayListadoAsignaturasEstudiante));
-        ejecutarPeticion(info, "AsignaturasEstudiante/Guardar", "asignaturasAgregadasEstudiante");
+        ejecutarPeticion(info, "AsignaturasEstudiante/Guardar", "asignaturasAgregadasEstudiante", contexto)
       }
     })
   });
@@ -230,7 +214,7 @@ function listadoAsignaturasEstudiante({ asignaturas, asignaturasEstudiante }) {
   $("#asignatura").off('change').on('change', function () {
     let info = new FormData();
     info.set('idAsignatura', $(this).val());
-    ejecutarPeticion(info, "AsignaturasProfesor/Profesores", "profesoresAsigntura");
+    ejecutarPeticion(info, "AsignaturasProfesor/Profesores", "profesoresAsigntura", contexto)
   });
   $("#asignatura").change();
 }
@@ -282,7 +266,7 @@ function quitarAsignaturaProfesor(posicion) {
 function asignaturasAgregadasEstudiante({ valid, message }) {
   if (valid) {
     ejecutarNotificacion('success', message);
-    ejecutarPeticion({}, "Estudiantes/Listar", "listadoEstudiantes");
+    ejecutarPeticion({}, "Estudiantes/Listar", "listadoEstudiantes", contexto)
     $("#modalAsignarAsignaturas").modal('hide');
     limpiarCampos();
   } else {

@@ -13,3 +13,20 @@ function ejecutarNotificacion(icon, title) {
 
   Toast.fire({ icon, title });
 }
+
+function ejecutarPeticion(form, metodoBack, funcionRetorno, contexto) {
+  $.ajax({
+    url: urlBase() + metodoBack,
+    type: 'POST',
+    dataType: 'json',
+    data: form,
+    processData: false,
+    contentType: false,
+    cache: false,
+    success: (resp) => {
+      if (funcionRetorno) {
+        contexto[funcionRetorno](resp)
+      }
+    }
+  });
+}

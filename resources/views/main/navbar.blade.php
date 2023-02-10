@@ -13,8 +13,8 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <?= Route::currentRouteName() == 'Informe' ? 'active text-primary' : '' ?>" href="<?= url('') ?>/Informe">
-            Informe
+          <a class="nav-link <?= Route::currentRouteName() == 'Reporte' ? 'active text-primary' : '' ?>" href="<?= url('') ?>/Reporte">
+            Reporte
           </a>
         </li>
         <li class="nav-item">
